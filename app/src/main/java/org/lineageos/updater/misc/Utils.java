@@ -266,6 +266,21 @@ public class Utils {
     }
 
     /**
+     * Check whether a list contains an update that can be installed on this device
+     *
+     * @param json update list
+     * @return true if json has at least a compatible update that can be installed
+     */
+    public static boolean hasInstallableUpdate(File json) throws IOException, JSONException {
+        for (UpdateInfo update : parseJson(json, true)) {
+            if (canInstall(update)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Get the offset to the compressed data of a file inside the given zip
      *
      * @param zipFile input zip file

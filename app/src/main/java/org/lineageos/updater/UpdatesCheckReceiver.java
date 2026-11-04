@@ -90,7 +90,12 @@ public class UpdatesCheckReceiver extends BroadcastReceiver {
             @Override
             public void onSuccess() {
                 try {
-                    if (json.exists() && Utils.checkForNewUpdates(json, jsonNew)) {
+                    // Without a cached list this is the first check on this device, so
+                    // there is nothing to compare with: report any installable update.
+                    boolean notify = json.exists()
+                            ? Utils.checkForNewUpdates(json, jsonNew)
+                            : Utils.hasInstallableUpdate(jsonNew);
+                    if (notify) {
                         showNotification(context);
                         updateRepeatingUpdatesCheck(context);
                     }

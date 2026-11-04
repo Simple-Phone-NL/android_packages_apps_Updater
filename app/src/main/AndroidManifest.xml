@@ -2,6 +2,10 @@
     package="org.lineageos.updater"
     android:versionCode="1">
 
+    <permission
+        android:name="org.lineageos.updater.permission.CHECK_FOR_UPDATE"
+        android:protectionLevel="signature" />
+
     <uses-permission android:name="android.permission.ACCESS_CACHE_FILESYSTEM" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -67,6 +71,15 @@
         <receiver android:name=".UpdatesCheckReceiver" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".SetupUpdateCheckReceiver"
+            android:exported="true"
+            android:permission="org.lineageos.updater.permission.CHECK_FOR_UPDATE">
+            <intent-filter>
+                <action android:name="org.lineageos.updater.action.SETUP_UPDATE_CHECK"/>
             </intent-filter>
         </receiver>
     </application>

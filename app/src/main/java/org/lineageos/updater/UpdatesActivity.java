@@ -415,6 +415,8 @@ public class UpdatesActivity extends UpdatesListActivity implements UpdateImport
     }
 
     private void getUpdatesList() {
+        // Show the cached list right away, then always check the server for
+        // new updates so the user doesn't have to press the refresh button.
         File jsonFile = Utils.getCachedUpdateList(this);
         if (jsonFile.exists()) {
             try {
@@ -423,9 +425,8 @@ public class UpdatesActivity extends UpdatesListActivity implements UpdateImport
             } catch (IOException | JSONException e) {
                 Log.e(TAG, "Error while parsing json list", e);
             }
-        } else {
-            downloadUpdatesList(false);
         }
+        downloadUpdatesList(false);
     }
 
     private void processNewJson(File json, File jsonNew, boolean manualRefresh) {

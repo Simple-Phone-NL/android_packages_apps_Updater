@@ -87,7 +87,8 @@ public class Utils {
     }
 
     public static boolean isCompatible(UpdateBaseInfo update) {
-        if (update.getVersion().compareTo(SystemProperties.get(Constants.PROP_BUILD_VERSION)) < 0) {
+        if (!compareVersions(update.getVersion(),
+                SystemProperties.get(Constants.PROP_BUILD_VERSION), allowMajorUpgrades())) {
             Log.d(TAG, update.getName() + " is older than current Android version");
             return false;
         }
@@ -119,9 +120,14 @@ public class Utils {
         }
     }
 
+    // Major upgrades (e.g. 22.2 -> 23.2 or 24.2) are allowed by default; set
+    // lineage.updater.allow_major_upgrades=false to restrict to the current major.
+    private static boolean allowMajorUpgrades() {
+        return SystemProperties.getBoolean(Constants.PROP_ALLOW_MAJOR_UPGRADES, true);
+    }
+
     public static boolean canInstall(UpdateBaseInfo update) {
-        boolean allowMajorUpgrades = SystemProperties.getBoolean(
-                Constants.PROP_ALLOW_MAJOR_UPGRADES, false);
+        boolean allowMajorUpgrades = allowMajorUpgrades();
 
         return (SystemProperties.getBoolean(Constants.PROP_UPDATER_ALLOW_DOWNGRADING, false) ||
                 update.getTimestamp() > SystemProperties.getLong(Constants.PROP_BUILD_DATE, 0)) &&
